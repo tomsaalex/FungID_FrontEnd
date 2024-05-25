@@ -1,4 +1,4 @@
-package com.example.fungid.components
+package com.example.fungid.components.camera
 
 import android.view.ViewGroup
 import androidx.camera.core.Preview

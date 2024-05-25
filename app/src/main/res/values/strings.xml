@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FungID</string>
+    <string name="login">Login</string>
 </resources>
