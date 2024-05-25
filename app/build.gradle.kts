@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.datastore.core.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,5 +83,16 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-permissions
     //implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.permissions)
+
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation(libs.retrofit)
+
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
+    implementation(libs.converter.gson)
+
+    // https://mvnrepository.com/artifact/androidx.datastore/datastore-preferences-core-jvm
+    implementation(libs.androidx.datastore.preferences.core.jvm)
+
+    implementation(libs.androidx.datastore.preferences.v100)
 
 }

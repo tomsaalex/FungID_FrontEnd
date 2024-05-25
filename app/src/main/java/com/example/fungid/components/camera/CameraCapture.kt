@@ -1,4 +1,4 @@
-package com.example.fungid.components
+package com.example.fungid.components.camera
 
 import android.Manifest
 import android.util.Log
