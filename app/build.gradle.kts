@@ -94,5 +94,4 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core.jvm)
 
     implementation(libs.androidx.datastore.preferences.v100)
-
 }
