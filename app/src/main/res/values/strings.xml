@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">FungID</string>
     <string name="login">Login</string>
+    <string name="snap_picture">Shoot Picture</string>
 </resources>

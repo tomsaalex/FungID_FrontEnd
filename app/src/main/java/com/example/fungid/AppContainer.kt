@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.fungid.auth.AuthRepository
 import com.example.fungid.auth.remote.AuthDataSource
+import com.example.fungid.classification.ClassificationRepository
+import com.example.fungid.classification.remote.ClassificationDataSource
+import com.example.fungid.components.camera.CameraManager
 import com.example.fungid.core.data.UserPreferencesRepository
 import com.example.fungid.util.TAG
 
@@ -18,12 +21,18 @@ class AppContainer(val context: Context) {
     }
 
     private val authDataSource: AuthDataSource = AuthDataSource()
+    private val classificationDataSource: ClassificationDataSource = ClassificationDataSource()
 
     val authRepository: AuthRepository by lazy {
         AuthRepository(authDataSource)
     }
 
+    val classificationRepository: ClassificationRepository = ClassificationRepository(classificationDataSource)
+
+
     val userPreferencesRepository: UserPreferencesRepository by lazy {
         UserPreferencesRepository(context.userPreferencesDataStore)
     }
+
+    lateinit var cameraManager: CameraManager
 }
