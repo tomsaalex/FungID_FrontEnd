@@ -16,12 +16,12 @@ class ClassificationRepository(private val classificationDataSource: Classificat
 
     private fun getBearerToken() = "Bearer ${Api.tokenInterceptor.token}"
 
-    suspend fun classifyMushroomImage(imageUri: Uri, contentResolver: ContentResolver): Result<MushroomClassificationDTO> {
+    suspend fun classifyMushroomImage(imageUri: Uri, imageName: String, contentResolver: ContentResolver): Result<MushroomClassificationDTO> {
         val mushroomImageByteArray = contentResolver.openInputStream(imageUri)
             .use {
                 it?.readBytes()
             }
 
-        return classificationDataSource.classifyMushroomImage(mushroomImageByteArray, getBearerToken())
+        return classificationDataSource.classifyMushroomImage(mushroomImageByteArray, imageName, getBearerToken())
     }
 }

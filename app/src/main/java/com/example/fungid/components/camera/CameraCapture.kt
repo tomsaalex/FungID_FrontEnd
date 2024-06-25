@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 fun CameraCapture(
     modifier: Modifier = Modifier,
     cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
-    onImageFile: (Uri) -> Unit = { }
+    onImageFile: (Uri, String) -> Unit = { _, _ -> }
 ) {
     Permission(
         permission = Manifest.permission.CAMERA,

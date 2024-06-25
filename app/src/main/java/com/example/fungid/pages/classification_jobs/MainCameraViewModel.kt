@@ -23,13 +23,13 @@ class MainCameraViewModel(
         Log.d(TAG, "init")
     }
 
-    fun classifyMushroomImage(imageUri: Uri, contentResolver: ContentResolver) {
+    fun classifyMushroomImage(imageUri: Uri, imageName: String, contentResolver: ContentResolver) {
         viewModelScope.launch {
             Log.v(TAG, "classify mushroom image")
 
-
-            val classificationResult = classificationRepository.classifyMushroomImage(imageUri, contentResolver)
+            val classificationResult = classificationRepository.classifyMushroomImage(imageUri, imageName, contentResolver)
             Log.d(TAG, classificationResult.getOrNull()?.classificationResult.toString());
+
         }
     }
 

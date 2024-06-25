@@ -24,7 +24,7 @@ class ClassificationDataSource{
 
     private val classificationService: ClassificationService = Api.retrofit.create(ClassificationService::class.java)
 
-    suspend fun classifyMushroomImage(imageByteArray: ByteArray?, authorizationString: String): Result<MushroomClassificationDTO>
+    suspend fun classifyMushroomImage(imageByteArray: ByteArray?, imageName: String, authorizationString: String): Result<MushroomClassificationDTO>
     {
         return try {
             // TODO: Maybe create this media type somewhere else
@@ -34,7 +34,7 @@ class ClassificationDataSource{
             val reqFile =
                 imageByteArray?.toRequestBody(mediaType.toMediaTypeOrNull(), 0, imageByteArray.size)
             val mushroomImage =
-                reqFile?.let { MultipartBody.Part.createFormData("mushroomImage", "mushroomImage", it) }
+                reqFile?.let { MultipartBody.Part.createFormData("mushroomImage", "$imageName.jpg", it) }
 
             Result.success(classificationService.classifyMushroomImage(mushroomImage = mushroomImage, authorization = authorizationString))
         } catch (e: Exception) {
