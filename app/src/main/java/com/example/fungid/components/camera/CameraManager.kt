@@ -47,7 +47,7 @@ class CameraManager(private val activity: MainActivity) {
             }
         }
 
-    public fun takePhoto(onImageFile: (Uri) -> Unit) {
+    public fun takePhoto(onImageFile: (Uri, String) -> Unit) {
         val imageCapture = imageCaptureUseCase ?: return
 
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
@@ -79,7 +79,7 @@ class CameraManager(private val activity: MainActivity) {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
                     Toast.makeText(activity.baseContext, msg, Toast.LENGTH_SHORT).show()
-                    outputFileResults.savedUri?.let { onImageFile(it) }
+                    outputFileResults.savedUri?.let { onImageFile(it, name) }
 
                     Log.d(TAG, msg)
                 }

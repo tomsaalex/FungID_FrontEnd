@@ -54,6 +54,9 @@ fun MainCameraPage(
     modifier: Modifier = Modifier
 ) {
     var imageUri by rememberSaveable { mutableStateOf(EMPTY_IMAGE_URI) }
+    var imageName by rememberSaveable {
+        mutableStateOf("")
+    }
     var showGallerySelect by rememberSaveable { mutableStateOf(false) }
 
     val mainCameraViewModel = viewModel<MainCameraViewModel>(factory = MainCameraViewModel.Factory)
@@ -100,7 +103,7 @@ fun MainCameraPage(
                         )
                         ),
                         onClick = {
-                            mainCameraViewModel.classifyMushroomImage(imageUri, context.contentResolver)
+                            mainCameraViewModel.classifyMushroomImage(imageUri, imageName, context.contentResolver)
                         }
                     ) {
                         Icon(Icons.Filled.Check, contentDescription = "Accept Image Button")
@@ -130,8 +133,9 @@ fun MainCameraPage(
             Box(modifier = modifier) {
                 CameraCapture(
                     modifier = modifier,
-                    onImageFile = { savedUri ->
+                    onImageFile = { savedUri, savedName ->
                         imageUri = savedUri
+                        imageName = savedName
                     }
                 )
                 Button(
