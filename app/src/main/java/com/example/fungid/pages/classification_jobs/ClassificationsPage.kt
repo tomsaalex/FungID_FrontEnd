@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,7 +26,8 @@ import com.example.fungid.R
 @Composable
 fun ClassificationsPage(
     modifier: Modifier = Modifier,
-    onActivateCamera: () -> Unit
+    onActivateCamera: () -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     Scaffold (
         topBar = {
@@ -34,7 +37,12 @@ fun ClassificationsPage(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Top app bar")
+                    Text("FungID - Classification History")
+                },
+                actions = {
+                    Button(onClick = onLogout) {
+                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log out button")
+                    }
                 }
             )
         },
