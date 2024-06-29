@@ -18,9 +18,11 @@ activityCompose = "1.8.2"
 composeBom = "2023.08.00"
 materialIconsExtended = "1.7.0-beta03"
 materialIconsExtendedVersion = "1.0.0-beta06"
+materialVersion = "1.6.8"
 navigationCompose = "2.7.7"
 retrofit = "2.11.0"
 datastoreCoreAndroid = "1.1.1"
+roomRuntime = "2.6.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -37,8 +39,12 @@ androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-p
 androidx-datastore-preferences-core-jvm = { module = "androidx.datastore:datastore-preferences-core-jvm", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "materialVersion" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-material-icons-extended-v100beta06 = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }

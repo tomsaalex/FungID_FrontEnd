@@ -7,7 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import com.example.fungid.pages.classification_jobs.EMPTY_IMAGE_URI
+import com.example.fungid.pages.classification_jobs.main_camera_page.EMPTY_IMAGE_URI
 import com.example.fungid.util.Permission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 

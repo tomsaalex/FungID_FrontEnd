@@ -1,7 +1,5 @@
-package com.example.fungid.pages.classification_jobs
+package com.example.fungid.pages.classification_jobs.classifications_page
 
-import android.content.ContentResolver
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,26 +8,26 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.fungid.MyApplication
 import com.example.fungid.classification.ClassificationRepository
+import com.example.fungid.classification.MushroomInstance
 import com.example.fungid.util.TAG
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.io.File
-import java.nio.file.Path
-import kotlin.io.path.outputStream
 
-class MainCameraViewModel(
+class ClassificationsPageViewModel(
     private val classificationRepository: ClassificationRepository
 ): ViewModel() {
+
+    val uiState: Flow<List<MushroomInstance>> = classificationRepository.mushroomInstancesStream
+
     init {
         Log.d(TAG, "init")
+        loadMushroomInstances()
     }
 
-    fun classifyMushroomImage(imageUri: Uri, imageName: String, contentResolver: ContentResolver) {
+    fun loadMushroomInstances() {
+        Log.d(TAG, "loadMushroomInstances...")
         viewModelScope.launch {
-            Log.v(TAG, "classify mushroom image")
-
-            val classificationResult = classificationRepository.classifyMushroomImage(imageUri, imageName, contentResolver)
-            Log.d(TAG, classificationResult.getOrNull()?.classificationResult.toString());
-
+            classificationRepository.refresh()
         }
     }
 
@@ -37,9 +35,7 @@ class MainCameraViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                MainCameraViewModel(
-                    app.container.classificationRepository
-                )
+                ClassificationsPageViewModel(app.container.classificationRepository)
             }
         }
     }

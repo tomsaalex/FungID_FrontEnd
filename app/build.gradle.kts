@@ -1,6 +1,15 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.devtools.ksp")
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
@@ -60,6 +69,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.core.android)
     testImplementation(libs.junit)
@@ -95,4 +106,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core.jvm)
 
     implementation(libs.androidx.datastore.preferences.v100)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }

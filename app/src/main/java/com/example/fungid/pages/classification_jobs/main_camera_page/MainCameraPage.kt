@@ -1,4 +1,4 @@
-package com.example.fungid.pages.classification_jobs
+package com.example.fungid.pages.classification_jobs.main_camera_page
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.fungid.R
