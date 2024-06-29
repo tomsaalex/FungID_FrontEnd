@@ -39,7 +39,6 @@ import com.example.fungid.util.TAG
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationPage(
-    modifier: Modifier = Modifier,
     onChooseLogin: () -> Unit,
     onRegisterSuccessful: () -> Unit
 ) {
@@ -59,7 +58,7 @@ fun RegistrationPage(
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.login)) }) },
+        topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.register)) }) },
     ) {
 
         Column(

@@ -1,7 +1,6 @@
 package com.example.fungid.pages.login
 
 import android.util.Log
-import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,14 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -38,23 +35,45 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fungid.R
+import com.example.fungid.exceptions.login.InvalidCredentialsException
+import com.example.fungid.exceptions.network.ServerUnreacheableException
 import com.example.fungid.util.CustomClickableText
 import com.example.fungid.util.TAG
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
-    modifier: Modifier = Modifier,
     onChooseRegister: () -> Unit,
     onChooseOffline: () -> Unit,
     onLoginSuccessful: () -> Unit
-){
+) {
 
     val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModel.Factory)
     val loginUiState = loginViewModel.uiState
 
     var usernameText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
+
+    val errorColor = Color.Red
+
+    val outLinedTextFieldColors = if (loginUiState.authenticatingError != null) {
+        OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = errorColor,
+            unfocusedLabelColor = errorColor,
+            focusedBorderColor = errorColor,
+            focusedLabelColor = errorColor
+        )
+    } else {
+        OutlinedTextFieldDefaults.colors()
+    }
+
+    val errorMessageText: String =
+        when (loginUiState.authenticatingError) {
+            null -> ""
+            is ServerUnreacheableException -> "The server could not be reached."
+            is InvalidCredentialsException -> "The credentials provided are invalid."
+            else -> "The authentication failed for an unknown reason."
+        }
 
     LaunchedEffect(loginUiState.authenticationCompleted) {
         Log.d(TAG, "Auth completed")
@@ -72,7 +91,6 @@ fun LoginPage(
                 .padding(it)
                 .fillMaxSize()
                 .padding(28.dp),
-            /*verticalArrangement = Arrangement.Center,*/
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -84,14 +102,15 @@ fun LoginPage(
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f)
             )
-            //Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
 
+                colors = outLinedTextFieldColors,
                 singleLine = true,
                 value = usernameText,
-                onValueChange = { usernameText = it },
+                onValueChange = { newUsername -> usernameText = newUsername },
                 label = { Text("Username") },
                 placeholder = { Text("Type username here") },
                 shape = RoundedCornerShape(percent = 20),
@@ -104,8 +123,9 @@ fun LoginPage(
                 modifier = Modifier
                     .fillMaxWidth(),
 
+                colors = outLinedTextFieldColors,
                 value = passwordText,
-                onValueChange = { passwordText = it },
+                onValueChange = { newPassword -> passwordText = newPassword },
                 label = { Text("Password") },
                 placeholder = { Text("Type password here") },
                 shape = RoundedCornerShape(percent = 20),
@@ -121,6 +141,9 @@ fun LoginPage(
                     }
                 )
             )
+
+            Text(errorMessageText, color = errorColor)
+
             Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
             Button(

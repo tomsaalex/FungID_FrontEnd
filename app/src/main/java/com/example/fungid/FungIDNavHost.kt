@@ -12,10 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.fungid.core.data.UserPreferences
 import com.example.fungid.core.data.remote.Api
 import com.example.fungid.core.ui.UserPreferencesViewModel
-import com.example.fungid.pages.classification_jobs.MainCameraPage
+import com.example.fungid.pages.classification_jobs.main_camera_page.MainCameraPage
 import com.example.fungid.pages.login.LoginPage
 import com.example.fungid.pages.register.RegistrationPage
-import com.example.fungid.pages.classification_jobs.ClassificationsPage
+import com.example.fungid.pages.classification_jobs.classifications_page.ClassificationsPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 val LOGIN_ROUTE = "login"
@@ -51,11 +51,10 @@ fun FungIDNavHost() {
                         "LoginPage",
                         "Offline Mode Clicked"
                     )
-                },
-                onLoginSuccessful = {
-                    navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE)
                 }
-            )
+            ) {
+                navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE)
+            }
         }
         composable(REGISTRATION_ROUTE) {
             RegistrationPage(
@@ -65,27 +64,25 @@ fun FungIDNavHost() {
                         "Login Clicked"
                     )
                     navController.navigate(LOGIN_ROUTE)
-                },
-                onRegisterSuccessful = {
-                    navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE)
                 }
-            )
+            ) {
+                navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE)
+            }
         }
         composable(CLASSIFICATION_JOB_LIST_ROUTE) {
             ClassificationsPage(
                 onActivateCamera = {
                     Log.d("ClassificationsPage", "Triggering camera")
                     navController.navigate(CAMERA_PAGE)
-                },
-                onLogout = {
-                    Log.d("ClassificationsPage", "Log out initiated")
-                    fungIDViewModel.logout()
-                    Api.tokenInterceptor.token = null
-                    navController.navigate(LOGIN_ROUTE) {
-                        popUpTo(0)
-                    }
                 }
-            )
+            ) {
+                Log.d("ClassificationsPage", "Log out initiated")
+                fungIDViewModel.logout()
+                Api.tokenInterceptor.token = null
+                navController.navigate(LOGIN_ROUTE) {
+                    popUpTo(0)
+                }
+            }
         }
         composable(CAMERA_PAGE) {
             MainCameraPage()

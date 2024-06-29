@@ -27,7 +27,10 @@ class AppContainer(val context: Context) {
         AuthRepository(authDataSource)
     }
 
-    val classificationRepository: ClassificationRepository = ClassificationRepository(classificationDataSource)
+    private val database: FungIDDatabase by lazy { FungIDDatabase.getDatabase(context) }
+    private val mushroomInstanceDao = database.mushroomInstanceDao()
+
+    val classificationRepository: ClassificationRepository = ClassificationRepository(classificationDataSource, mushroomInstanceDao)
 
 
     val userPreferencesRepository: UserPreferencesRepository by lazy {

@@ -1,8 +1,6 @@
 package com.example.fungid.pages.login
 
-import android.text.Spannable.Factory
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,14 +38,14 @@ class LoginViewModel(
             Log.v(TAG, "login")
             uiState = uiState.copy(isAuthenticating = true, authenticatingError = null)
             val result = authRepository.login(username, password)
-            if (result.isSuccess) {
+            uiState = if (result.isSuccess) {
                 userPreferencesRepository.save(
                     UserPreferences(username, result.getOrNull()?.token ?: "")
                 )
                 Log.d(TAG, result.getOrNull()?.token ?: "")
-                uiState = uiState.copy(isAuthenticating = false, authenticationCompleted = true)
+                uiState.copy(isAuthenticating = false, authenticationCompleted = true)
             } else {
-                uiState = uiState.copy(
+                uiState.copy(
                     isAuthenticating = false,
                     authenticatingError = result.exceptionOrNull()
                 )
