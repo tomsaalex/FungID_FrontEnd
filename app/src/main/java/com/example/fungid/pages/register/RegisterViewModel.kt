@@ -13,6 +13,7 @@ import com.example.fungid.MyApplication
 import com.example.fungid.auth.AuthRepository
 import com.example.fungid.core.data.UserPreferences
 import com.example.fungid.core.data.UserPreferencesRepository
+import com.example.fungid.exceptions.register.PasswordMismatchException
 import com.example.fungid.util.TAG
 import kotlinx.coroutines.launch
 
@@ -33,18 +34,24 @@ class RegisterViewModel (
         Log.d(TAG, "init")
     }
 
-    fun register (username: String, password: String, email: String) {
+    fun register (username: String, password: String, passwordConfirmation: String, email: String) {
         viewModelScope.launch {
+
             Log.v(TAG, "register")
+            if (password != passwordConfirmation) {
+                uiState = uiState.copy(registrationError = PasswordMismatchException("Password and password confirmation are not the same"))
+                return@launch
+            }
             uiState = uiState.copy(isRegistering = true, registrationError = null)
+
             val result = authRepository.register(username, password, email)
-            if (result.isSuccess) {
+            uiState = if (result.isSuccess) {
                 userPreferencesRepository.save(
                     UserPreferences(username, result.getOrNull()?.token ?: "")
                 )
-                uiState = uiState.copy(isRegistering = false, registrationCompleted = true)
+                uiState.copy(isRegistering = false, registrationCompleted = true)
             } else {
-                uiState = uiState.copy(
+                uiState.copy(
                     isRegistering = false,
                     registrationError = result.exceptionOrNull()
                 )

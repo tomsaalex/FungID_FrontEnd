@@ -4,6 +4,10 @@ import android.util.Log
 import com.example.fungid.core.data.remote.Api
 import com.example.fungid.exceptions.login.InvalidCredentialsException
 import com.example.fungid.exceptions.network.ServerUnreacheableException
+import com.example.fungid.exceptions.register.EmailTakenException
+import com.example.fungid.exceptions.register.UncompletedFieldsException
+import com.example.fungid.exceptions.register.UnspecifiedConflictException
+import com.example.fungid.exceptions.register.UsernameTakenException
 import com.example.fungid.util.TAG
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -26,17 +30,19 @@ class AuthDataSource {
 
     suspend fun login(user: User): Result<TokenHolder> {
         return try {
+            Log.d(TAG, "Attempting login")
             Result.success(authService.login(user))
-        }
-        catch (socketEx: SocketTimeoutException) {
+        } catch (socketEx: SocketTimeoutException) {
             Log.w(TAG, "Login failed - Couldn't reach server")
             Result.failure(ServerUnreacheableException(socketEx.message))
-        }
-        catch (authorizationEx: retrofit2.HttpException) {
+        } catch (authorizationEx: retrofit2.HttpException) {
             Log.w(TAG, "Login failed - Invalid credentials")
-            Result.failure(InvalidCredentialsException(authorizationEx.message))
-        }
-        catch (e: Exception) {
+            if (authorizationEx.response()?.code() != 404)
+                throw authorizationEx
+
+            val errorBody: String = authorizationEx.response()?.errorBody().toString()
+            Result.failure(InvalidCredentialsException(errorBody))
+        } catch (e: Exception) {
             Log.w(TAG, "Login failed - Unforeseen reason", e)
             Result.failure(e)
         }
@@ -44,9 +50,35 @@ class AuthDataSource {
 
     suspend fun register(user: RegisterDTO): Result<TokenHolder> {
         return try {
+            Log.d(TAG, "Attempting register")
             Result.success(authService.register(user))
+        } catch (registrationEx: retrofit2.HttpException) {
+            if (registrationEx.response()?.code() == 409) {
+                val errorBody: String = registrationEx.response()?.errorBody()?.string()!!
+                Log.d(TAG,errorBody)
+                if (errorBody.contains("Email")) {
+                    Log.w(TAG, "Register failed - Email taken")
+                    Result.failure(EmailTakenException(errorBody))
+                } else if (errorBody.contains("Username")) {
+                    Log.w(TAG, "Register failed - Username taken")
+                    Result.failure(UsernameTakenException(errorBody))
+                } else {
+                    Log.w(TAG, "Register failed - Unknown conflict with another user's data")
+                    Result.failure(UnspecifiedConflictException(errorBody))
+                }
+            }
+            else if (registrationEx.response()?.code() == 400) {
+                val errorBody: String = registrationEx.response()?.errorBody()?.string()!!
+                Result.failure(UncompletedFieldsException(errorBody))
+            } else
+            {
+                throw registrationEx
+            }
+        } catch (socketEx: SocketTimeoutException) {
+            Log.w(TAG, "Register failed - Couldn't reach server")
+            Result.failure(ServerUnreacheableException(socketEx.message))
         } catch (e: Exception) {
-            Log.w(TAG, "Login failed", e)
+            Log.w(TAG, "Register failed - Unforeseen reason", e)
             Result.failure(e)
         }
     }

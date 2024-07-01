@@ -64,6 +64,12 @@ fun FungIDNavHost() {
                         "Login Clicked"
                     )
                     navController.navigate(LOGIN_ROUTE)
+                },
+                onChooseOffline = {
+                    Log.d(
+                        "RegisterPage",
+                        "Offline Mode Clicked"
+                    )
                 }
             ) {
                 navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE)

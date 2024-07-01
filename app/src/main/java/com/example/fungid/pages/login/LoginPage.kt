@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -56,24 +60,36 @@ fun LoginPage(
 
     val errorColor = Color.Red
 
-    val outLinedTextFieldColors = if (loginUiState.authenticatingError != null) {
-        OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = errorColor,
-            unfocusedLabelColor = errorColor,
-            focusedBorderColor = errorColor,
-            focusedLabelColor = errorColor
-        )
-    } else {
-        OutlinedTextFieldDefaults.colors()
-    }
+    val textFieldDefaultColors = OutlinedTextFieldDefaults.colors()
+    val textFieldErrorColors = OutlinedTextFieldDefaults.colors(
+        unfocusedBorderColor = errorColor,
+        unfocusedLabelColor = errorColor,
+        focusedBorderColor = errorColor,
+        focusedLabelColor = errorColor
+    )
 
-    val errorMessageText: String =
-        when (loginUiState.authenticatingError) {
-            null -> ""
-            is ServerUnreacheableException -> "The server could not be reached."
-            is InvalidCredentialsException -> "The credentials provided are invalid."
-            else -> "The authentication failed for an unknown reason."
+    var outLinedTextFieldColors = textFieldDefaultColors
+
+    val errorMessageText: String
+    when (loginUiState.authenticatingError) {
+        null -> {
+            errorMessageText = ""
         }
+
+        is ServerUnreacheableException -> {
+            errorMessageText = "The server could not be reached."
+        }
+
+        is InvalidCredentialsException -> {
+            errorMessageText = "The credentials provided are invalid."
+
+        }
+
+        else -> {
+            errorMessageText = "The authentication failed for an unknown reason."
+            outLinedTextFieldColors = textFieldErrorColors
+        }
+    }
 
     LaunchedEffect(loginUiState.authenticationCompleted) {
         Log.d(TAG, "Auth completed")
@@ -124,6 +140,7 @@ fun LoginPage(
                     .fillMaxWidth(),
 
                 colors = outLinedTextFieldColors,
+                singleLine = true,
                 value = passwordText,
                 onValueChange = { newPassword -> passwordText = newPassword },
                 label = { Text("Password") },
@@ -151,10 +168,21 @@ fun LoginPage(
                     Log.d(TAG, "login...")
                     loginViewModel.login(usernameText, passwordText)
                 },
+                enabled = !loginUiState.isAuthenticating,
                 shape = RoundedCornerShape(percent = 20),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
-                Text("Log In!")
+                if (loginUiState.isAuthenticating) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.width(32.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                } else {
+                    Text("Log in!")
+                }
             }
 
 
