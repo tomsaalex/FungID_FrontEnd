@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -50,7 +50,7 @@ fun ClassificationsPage(
                 },
                 actions = {
                     Button(onClick = onLogout) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log out button")
+                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Log out button")
                     }
                 }
             )
