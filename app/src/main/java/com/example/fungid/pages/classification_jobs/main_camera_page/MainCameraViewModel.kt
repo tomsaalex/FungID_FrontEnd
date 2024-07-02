@@ -12,6 +12,7 @@ import com.example.fungid.MyApplication
 import com.example.fungid.classification.ClassificationRepository
 import com.example.fungid.util.TAG
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class MainCameraViewModel(
     private val classificationRepository: ClassificationRepository
@@ -20,13 +21,12 @@ class MainCameraViewModel(
         Log.d(TAG, "init")
     }
 
-    fun classifyMushroomImage(imageUri: Uri, imageName: String, contentResolver: ContentResolver) {
+    fun classifyMushroomImage(imageUri: Uri, imageDate: LocalDateTime, contentResolver: ContentResolver) {
         viewModelScope.launch {
             Log.v(TAG, "classify mushroom image")
 
-            val classificationResult = classificationRepository.classifyMushroomImage(imageUri, imageName, contentResolver)
+            val classificationResult = classificationRepository.classifyMushroomImage(imageUri, imageDate, contentResolver)
             Log.d(TAG, classificationResult.getOrNull()?.classificationResult.toString())
-
         }
     }
 

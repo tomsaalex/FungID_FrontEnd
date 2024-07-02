@@ -1,9 +1,9 @@
 package com.example.fungid.classification.remote
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class MushroomClassificationDTO(
     val mushroomInstanceId: Long,
     val classificationResult: String,
-    val takenAt: LocalDate
+    val takenAt: LocalDateTime
 )

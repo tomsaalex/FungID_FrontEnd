@@ -18,10 +18,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fungid.AppConstants
 import com.example.fungid.classification.MushroomInstance
 
 @Composable
 fun ClassificationComponent(mushroomInstance: MushroomInstance) {
+
+    val mushroomDate = AppConstants.DISPLAY_DATE_FORMATTER.format(mushroomInstance.sampleTakenAt)
+
     OutlinedCard(
         colors =
         CardDefaults.cardColors(
@@ -74,7 +78,7 @@ fun ClassificationComponent(mushroomInstance: MushroomInstance) {
                     fontSize = 14.sp
                 )
                 Text(
-                    text = "Date: 25/05/2024",
+                    text = "Date: ${mushroomDate}",
                     modifier = Modifier
                         .padding(
                             top = 10.dp,

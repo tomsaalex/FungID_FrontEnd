@@ -1,6 +1,7 @@
 package com.example.fungid.classification.remote
 
 import android.util.Log
+import com.example.fungid.AppConstants
 import com.example.fungid.classification.MushroomInstance
 import com.example.fungid.core.data.remote.Api
 import com.example.fungid.util.TAG
@@ -12,6 +13,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import java.time.LocalDateTime
 
 class ClassificationDataSource{
     interface ClassificationService {
@@ -20,7 +22,8 @@ class ClassificationDataSource{
         @POST("/api/classifications/identify")
         suspend fun classifyMushroomImage(
             @Header("Authorization") authorization: String,
-            @Part mushroomImage: MultipartBody.Part?
+            @Part("mushroomDate") mushroomDate: String,
+            @Part mushroomImage: MultipartBody.Part?,
         ): MushroomClassificationDTO
 
         @GET("/api/classifications/mushroom-instances")
@@ -31,19 +34,20 @@ class ClassificationDataSource{
 
     private val classificationService: ClassificationService = Api.retrofit.create(ClassificationService::class.java)
 
-    suspend fun classifyMushroomImage(imageByteArray: ByteArray?, imageName: String, authorizationString: String): Result<MushroomClassificationDTO>
+    suspend fun classifyMushroomImage(imageByteArray: ByteArray?, imageDate: LocalDateTime, authorizationString: String): Result<MushroomClassificationDTO>
     {
         return try {
-            // TODO: Maybe create this media type somewhere else
-            val mediaType = "image/jpeg"
+            val imageDateString = imageDate.format(AppConstants.NETWORK_TRANSFER_DATE_FORMATTER)
 
             //val reqFile = imageFile.asRequestBody(mediaType.toMediaTypeOrNull())
             val reqFile =
-                imageByteArray?.toRequestBody(mediaType.toMediaTypeOrNull(), 0, imageByteArray.size)
+                imageByteArray?.toRequestBody(AppConstants.IMAGE_MEDIA_TYPE.toMediaTypeOrNull(), 0, imageByteArray.size)
             val mushroomImage =
-                reqFile?.let { MultipartBody.Part.createFormData("mushroomImage", "$imageName.jpg", it) }
+                reqFile?.let { MultipartBody.Part.createFormData("mushroomImage", "$imageDateString.jpg", it) }
 
-            val classificationResult:MushroomClassificationDTO = classificationService.classifyMushroomImage(mushroomImage = mushroomImage, authorization = authorizationString)
+
+            Log.d(TAG, imageDateString)
+            val classificationResult:MushroomClassificationDTO = classificationService.classifyMushroomImage(mushroomImage = mushroomImage, mushroomDate = imageDateString, authorization = authorizationString)
             Log.d(TAG, "Image classification result received successfully")
             Result.success(classificationResult)
         } catch (e: Exception) {
@@ -54,17 +58,16 @@ class ClassificationDataSource{
 
     suspend fun getAllClassificationsPerUser(authorizationString: String): Result<List<MushroomInstance>> {
         return try {
-
             val mushroomDTOs: List<MushroomClassificationDTO> = classificationService.getAllClassifiedMushroomsForUser(authorization = authorizationString)
             val mushroomInstances = mushroomDTOs.map {
                 mapFromDTO(it)
             }
 
             Log.d(TAG, "Mushroom instances successfully retrieved from the server")
-            return Result.success(mushroomInstances)
+            Result.success(mushroomInstances)
         } catch (e: Exception) {
             Log.w(TAG, "Failed to retrieve mushroom instances from the server")
-            return Result.failure(e)
+            Result.failure(e)
         }
     }
 

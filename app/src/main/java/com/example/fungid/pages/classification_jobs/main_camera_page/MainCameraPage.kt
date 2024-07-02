@@ -13,12 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -44,6 +44,7 @@ import com.example.fungid.components.camera.GallerySelect
 import com.example.fungid.ui.theme.FungIDTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.time.LocalDateTime
 
 val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
 
@@ -53,8 +54,8 @@ fun MainCameraPage(
     modifier: Modifier = Modifier
 ) {
     var imageUri by rememberSaveable { mutableStateOf(EMPTY_IMAGE_URI) }
-    var imageName by rememberSaveable {
-        mutableStateOf("")
+    var imageDate by rememberSaveable {
+        mutableStateOf(LocalDateTime.now())
     }
     var showGallerySelect by rememberSaveable { mutableStateOf(false) }
 
@@ -102,7 +103,7 @@ fun MainCameraPage(
                         )
                         ),
                         onClick = {
-                            mainCameraViewModel.classifyMushroomImage(imageUri, imageName, context.contentResolver)
+                            mainCameraViewModel.classifyMushroomImage(imageUri, imageDate, context.contentResolver)
                         }
                     ) {
                         Icon(Icons.Filled.Check, contentDescription = "Accept Image Button")
@@ -131,12 +132,11 @@ fun MainCameraPage(
         } else {
             Box(modifier = modifier) {
                 CameraCapture(
-                    modifier = modifier,
-                    onImageFile = { savedUri, savedName ->
-                        imageUri = savedUri
-                        imageName = savedName
-                    }
-                )
+                    modifier = modifier
+                ) { savedUri, savedDate ->
+                    imageUri = savedUri
+                    imageDate = savedDate
+                }
                 Button(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

@@ -1,8 +1,6 @@
 package com.example.fungid.core.ui
 
-import android.text.Spannable.Factory
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope

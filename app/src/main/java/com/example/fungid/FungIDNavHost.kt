@@ -12,10 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.fungid.core.data.UserPreferences
 import com.example.fungid.core.data.remote.Api
 import com.example.fungid.core.ui.UserPreferencesViewModel
+import com.example.fungid.pages.classification_jobs.classifications_page.ClassificationsPage
 import com.example.fungid.pages.classification_jobs.main_camera_page.MainCameraPage
 import com.example.fungid.pages.login.LoginPage
 import com.example.fungid.pages.register.RegistrationPage
-import com.example.fungid.pages.classification_jobs.classifications_page.ClassificationsPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 val LOGIN_ROUTE = "login"

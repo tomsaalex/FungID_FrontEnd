@@ -6,9 +6,10 @@ import android.util.Log
 import com.example.fungid.classification.local.MushroomInstanceDao
 import com.example.fungid.classification.remote.ClassificationDataSource
 import com.example.fungid.classification.remote.MushroomClassificationDTO
-import com.example.fungid.exceptions.DataFetchingException
 import com.example.fungid.core.data.remote.Api
+import com.example.fungid.exceptions.DataFetchingException
 import com.example.fungid.util.TAG
+import java.time.LocalDateTime
 
 class ClassificationRepository(
     private val classificationDataSource: ClassificationDataSource,
@@ -22,13 +23,13 @@ class ClassificationRepository(
 
     private fun getBearerToken() = "Bearer ${Api.tokenInterceptor.token}"
 
-    suspend fun classifyMushroomImage(imageUri: Uri, imageName: String, contentResolver: ContentResolver): Result<MushroomClassificationDTO> {
+    suspend fun classifyMushroomImage(imageUri: Uri, imageDate: LocalDateTime, contentResolver: ContentResolver): Result<MushroomClassificationDTO> {
         val mushroomImageByteArray = contentResolver.openInputStream(imageUri)
             .use {
                 it?.readBytes()
             }
 
-        return classificationDataSource.classifyMushroomImage(mushroomImageByteArray, imageName, getBearerToken())
+        return classificationDataSource.classifyMushroomImage(mushroomImageByteArray, imageDate, getBearerToken())
     }
 
     suspend fun refresh() {

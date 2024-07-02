@@ -1,6 +1,5 @@
 package com.example.fungid.auth
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 import com.example.fungid.auth.remote.AuthDataSource
 import com.example.fungid.auth.remote.RegisterDTO
@@ -12,10 +11,6 @@ import com.example.fungid.util.TAG
 class AuthRepository(private val authDataSource: AuthDataSource) {
     init {
         Log.d(TAG, "init")
-    }
-
-    fun clearToken() {
-        Api.tokenInterceptor.token = null
     }
 
     suspend fun login(username: String, password: String): Result<TokenHolder> {

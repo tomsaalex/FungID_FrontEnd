@@ -111,4 +111,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Converters retrofit
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-scalars
+    implementation(libs.converter.scalars)
+
 }

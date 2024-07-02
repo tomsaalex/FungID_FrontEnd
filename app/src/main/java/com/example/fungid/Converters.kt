@@ -1,20 +1,17 @@
 package com.example.fungid
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 
 class Converters {
 
     @TypeConverter
-    fun fromString(value: String?): LocalDate? {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return value?.let { LocalDate.parse(it, formatter) }
+    fun fromString(value: String?): LocalDateTime? {
+        return value?.let { LocalDateTime.parse(it, AppConstants.DB_DATE_TIME_FORMATTER) }
     }
 
     @TypeConverter
-    fun localDateToString(localDate: LocalDate?): String? {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return localDate?.format(formatter)
+    fun localDateTimeToString(localDateTime: LocalDateTime?): String? {
+        return localDateTime?.format(AppConstants.DB_DATE_TIME_FORMATTER)
     }
 }
