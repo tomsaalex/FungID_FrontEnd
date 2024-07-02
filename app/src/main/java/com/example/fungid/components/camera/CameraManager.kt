@@ -2,7 +2,6 @@ package com.example.fungid.components.camera
 
 import android.Manifest
 import android.content.ContentValues
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -15,44 +14,25 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.example.fungid.AppConstants
 import com.example.fungid.MainActivity
 import com.example.fungid.util.TAG
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.LocalDateTime
 import java.util.concurrent.ExecutorService
 
 class CameraManager(private val activity: MainActivity) {
-    public var imageCaptureUseCase: ImageCapture? = null
-    public var previewUseCase: Preview? = null
+    var imageCaptureUseCase: ImageCapture? = null
+    var previewUseCase: Preview? = null
 
     lateinit var cameraExecutor: ExecutorService
 
-    private val activityResultLauncher =
-        activity.registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        )
-        { permissions ->
-            var permissionGranted = true
-            permissions.entries.forEach {
-                if (it.key in REQUIRED_PERMISSIONS && !it.value)
-                    permissionGranted = false
-            }
-            if (!permissionGranted) {
-                Toast.makeText(
-                    activity.baseContext, "Permission request denied",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                startCamera()
-            }
-        }
-
-    public fun takePhoto(onImageFile: (Uri, String) -> Unit) {
+    fun takePhoto(onImageFile: (Uri, LocalDateTime) -> Unit) {
         val imageCapture = imageCaptureUseCase ?: return
 
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
+        val imageDate = LocalDateTime.now()
+        val imageDateString = AppConstants.NETWORK_TRANSFER_DATE_FORMATTER.format(imageDate)
         val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.DISPLAY_NAME, imageDateString)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
 
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
@@ -79,7 +59,7 @@ class CameraManager(private val activity: MainActivity) {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
                     Toast.makeText(activity.baseContext, msg, Toast.LENGTH_SHORT).show()
-                    outputFileResults.savedUri?.let { onImageFile(it, name) }
+                    outputFileResults.savedUri?.let { onImageFile(it, imageDate) }
 
                     Log.d(TAG, msg)
                 }
@@ -88,7 +68,7 @@ class CameraManager(private val activity: MainActivity) {
 
     }
 
-    public fun startCamera() {
+    fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(activity)
 
         cameraProviderFuture.addListener({
@@ -113,20 +93,7 @@ class CameraManager(private val activity: MainActivity) {
                 .build()
     }
 
-    private fun requestPermissions() {
-        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            activity.baseContext,
-            it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-
     companion object {
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA

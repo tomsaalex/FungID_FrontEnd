@@ -3,6 +3,7 @@ package com.example.fungid.core.data.remote
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object Api {
     private const val URL = "192.168.1.17:8080"
@@ -14,6 +15,7 @@ object Api {
 
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(HTTP_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 }
