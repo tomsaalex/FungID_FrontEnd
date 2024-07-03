@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.fungid.classification.MushroomInstance
 import com.example.fungid.classification.local.MushroomInstanceDao
 
-@Database(entities = arrayOf(MushroomInstance::class), version = 1)
+@Database(entities = [MushroomInstance::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class FungIDDatabase: RoomDatabase() {
     abstract fun mushroomInstanceDao(): MushroomInstanceDao
