@@ -2,11 +2,17 @@ package com.example.fungid.components.camera
 
 import android.Manifest
 import android.net.Uri
-import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -55,60 +61,86 @@ private fun FullUICameraComponent(
     onImageFile: (Uri, LocalDateTime) -> Unit,
     onGallerySelectClick: () -> Unit
 ) {
-    Box(modifier = modifier) {
+    BoxWithConstraints(modifier = modifier) {
+        val boxWithConstraintsScope = this
         val context = LocalContext.current
         val coroutineScope = rememberCoroutineScope()
 
         val cameraManager = (context.applicationContext as MyApplication).container.cameraManager
+        val isSmallScreen = boxWithConstraintsScope.maxHeight < 700.dp
 
-        Box {
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+            modifier = modifier.fillMaxHeight()
+        ) {
+            val rowModifier = if (isSmallScreen) modifier.fillMaxWidth() else modifier
+                .fillMaxHeight()
+                .then(Modifier.weight(1f))
+
+            if (!isSmallScreen)
+                Spacer(modifier = modifier.weight(1f))
+
             CameraPreview(
-                modifier = Modifier.fillMaxSize(),
-                scaleType = PreviewView.ScaleType.FIT_CENTER,
+                modifier = modifier.fillMaxWidth(),
                 onUseCase = {
                     cameraManager.previewUseCase = it
                 }
             )
-
-            Button(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .size(70.dp)
-                    .align(Alignment.BottomCenter),
-                contentPadding = PaddingValues(0.dp),
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                onClick = {
-                    coroutineScope.launch {
-                        cameraManager.takePhoto(onImageFile)
+            Row(
+                rowModifier,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Box(
+                    modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(70.dp),
+                        contentPadding = PaddingValues(0.dp),
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        onClick = {
+                            coroutineScope.launch {
+                                cameraManager.takePhoto(onImageFile)
+                            }
+                        }
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.snap_image_button),
+                            contentDescription = stringResource(R.string.snap_picture),
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
                 }
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.snap_image_button),
-                    contentDescription = stringResource(R.string.snap_picture),
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
 
-            Button(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(20.dp)
-                    .size(70.dp),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                contentPadding = PaddingValues(0.dp),
-                onClick = onGallerySelectClick
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.gallery_thumbnail),
-                    contentDescription = "Select from gallery",
-                    modifier = Modifier.fillMaxSize()
-                )
+                Box(
+                    modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(70.dp),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = onGallerySelectClick
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.gallery_thumbnail),
+                            contentDescription = "Select from gallery",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
             }
-
         }
+
+
+
         LaunchedEffect(cameraManager.previewUseCase) {
             cameraManager.startCamera()
         }
