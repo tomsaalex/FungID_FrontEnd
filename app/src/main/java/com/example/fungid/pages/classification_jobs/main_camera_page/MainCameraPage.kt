@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -26,19 +29,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.fungid.R
 import com.example.fungid.components.camera.CameraCapture
 import com.example.fungid.components.camera.GallerySelect
 import com.example.fungid.ui.theme.FungIDTheme
@@ -71,55 +70,80 @@ fun MainCameraPage(
     }
 
     if (imageUri != EMPTY_IMAGE_URI) {
-        Box(modifier = modifier) {
+        Column(modifier = modifier) {
+            Spacer(modifier.fillMaxHeight(0.1f))
             Image(
-                modifier = Modifier.fillMaxSize(),
                 painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Captured image"
+                contentDescription = "Captured image",
             )
-            Column(
+            Spacer(modifier.fillMaxHeight(0.1f))
+            Text(
+                text = "Would you like to keep this image?",
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier.fillMaxHeight(0.1f))
+            Row(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
+                    //.align(Alignment.BottomCenter)
                     .padding(0.dp, 0.dp, 0.dp, 64.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text(
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center,
-                    text = "Would you like to keep this image?"
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    // Accept image button
-                    Button(
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(
+                // Accept image button
+                Button(
+                    modifier = Modifier.size(70.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
                             0x3,
                             0x85,
                             0x3,
                             0xFF
                         )
-                        ),
-                        onClick = {
-                            mainCameraViewModel.classifyMushroomImage(imageUri, imageDate, context.contentResolver)
-                        }
-                    ) {
-                        Icon(Icons.Filled.Check, contentDescription = "Accept Image Button")
-                        Text("Yes")
+                    ),
+                    onClick = {
+                        mainCameraViewModel.classifyMushroomImage(
+                            imageUri,
+                            imageDate,
+                            context.contentResolver
+                        )
                     }
+                ) {
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = "Accept Image Button",
+                        modifier = Modifier.fillMaxSize(0.8f)
+                    )
+                    /*Text("Yes")*/
+                }
 
-                    // Reject image button
-                    Button(
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(151, 7, 7, 255)),
-                        onClick = { imageUri = EMPTY_IMAGE_URI }
-                    ) {
-                        Icon(Icons.Filled.Close, contentDescription = "Reject Image Button")
-                        Text("No")
-                    }
+                // Reject image button
+                Button(
+                    modifier = Modifier.size(70.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
+                            151,
+                            7,
+                            7,
+                            255
+                        )
+                    ),
+                    onClick = { imageUri = EMPTY_IMAGE_URI }
+                ) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "Reject Image Button",
+                        modifier = Modifier.fillMaxSize(0.8f)
+                    )
+                    /*Text("No")*/
                 }
             }
+
         }
     } else {
         if (showGallerySelect) {
@@ -132,30 +156,14 @@ fun MainCameraPage(
         } else {
             Box(modifier = modifier) {
                 CameraCapture(
-                    modifier = modifier
-                ) { savedUri, savedDate ->
-                    imageUri = savedUri
-                    imageDate = savedDate
-                }
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(30.dp)
-                        .size(70.dp),
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    contentPadding = PaddingValues(0.dp),
-                    onClick = {
+                    modifier = modifier,
+                    onImageFile = { savedUri, savedDate ->
+                        imageUri = savedUri
+                        imageDate = savedDate
+                    },
+                    onGallerySelectClick = {
                         showGallerySelect = true
-                    }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.gallery_thumbnail),
-                        contentDescription = "Select from gallery",
-                        modifier = Modifier.fillMaxSize()
-                    )
-
-                }
+                    })
             }
         }
     }
