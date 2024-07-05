@@ -1,13 +1,11 @@
 package com.example.fungid.components.camera
 
-import android.Manifest
 import android.content.ContentValues
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -21,7 +19,7 @@ import java.time.LocalDateTime
 import java.util.concurrent.ExecutorService
 
 class CameraManager(private val activity: MainActivity) {
-    var imageCaptureUseCase: ImageCapture? = null
+    private var imageCaptureUseCase: ImageCapture? = null
     var previewUseCase: Preview? = null
 
     lateinit var cameraExecutor: ExecutorService
@@ -89,18 +87,9 @@ class CameraManager(private val activity: MainActivity) {
 
         imageCaptureUseCase =
             ImageCapture.Builder()
+                //TODO: Play around with this and see if it fixes the rotation bug
+                // .setTargetRotation(activity.display.rotation)
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
                 .build()
-    }
-
-    companion object {
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf(
-                Manifest.permission.CAMERA
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
     }
 }

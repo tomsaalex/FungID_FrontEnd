@@ -22,6 +22,7 @@ class FungIDViewModel(
 
     fun logout() {
         viewModelScope.launch {
+            classificationRepository.deleteAll()
             userPreferencesRepository.save(UserPreferences())
         }
     }

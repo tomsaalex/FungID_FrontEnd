@@ -74,8 +74,8 @@ class ClassificationDataSource{
     private fun mapFromDTO(mushroomClassificationDTO: MushroomClassificationDTO): MushroomInstance {
         val mushroomSpecies = mushroomClassificationDTO.classificationResult
         val instanceId = mushroomClassificationDTO.mushroomInstanceId.toString()
-        mushroomClassificationDTO.takenAt
+        val sampleTakenAt = LocalDateTime.parse(mushroomClassificationDTO.sampleTakenAt, AppConstants.NETWORK_TRANSFER_DATE_FORMATTER)
 
-        return MushroomInstance( id = instanceId, mushroomSpecies = mushroomSpecies)
+        return MushroomInstance( id = instanceId, sampleTakenAt=sampleTakenAt, mushroomSpecies = mushroomSpecies)
     }
 }

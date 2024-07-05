@@ -32,6 +32,11 @@ class ClassificationRepository(
         return classificationDataSource.classifyMushroomImage(mushroomImageByteArray, imageDate, getBearerToken())
     }
 
+    suspend fun deleteAll() {
+        Log.d(TAG, "deleteAll")
+        mushroomInstanceDao.deleteAll()
+    }
+
     suspend fun refresh() {
         Log.d(TAG, "mushroom classification history refresh started")
         try {
