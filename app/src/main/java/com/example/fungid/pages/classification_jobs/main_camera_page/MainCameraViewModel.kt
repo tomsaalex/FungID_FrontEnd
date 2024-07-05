@@ -14,6 +14,8 @@ import com.example.fungid.util.TAG
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+
+
 class MainCameraViewModel(
     private val classificationRepository: ClassificationRepository
 ): ViewModel() {
