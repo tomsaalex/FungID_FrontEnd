@@ -30,7 +30,7 @@ class AppContainer(val context: Context) {
     private val database: FungIDDatabase by lazy { FungIDDatabase.getDatabase(context) }
     private val mushroomInstanceDao = database.mushroomInstanceDao()
 
-    val classificationRepository: ClassificationRepository = ClassificationRepository(classificationDataSource, mushroomInstanceDao)
+    val classificationRepository: ClassificationRepository = ClassificationRepository(classificationDataSource, mushroomInstanceDao, context)
 
 
     val userPreferencesRepository: UserPreferencesRepository by lazy {

@@ -13,13 +13,11 @@ import com.example.fungid.ui.theme.FungIDTheme
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var cameraManager: CameraManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val appContainer = (application as MyApplication).container
         appContainer.cameraManager = CameraManager(this)
-        cameraManager = appContainer.cameraManager
 
         setContent {
             FungIDTheme {
@@ -37,7 +35,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraManager.cameraExecutor.shutdown()
     }
 }
 

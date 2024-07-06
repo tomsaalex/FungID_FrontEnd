@@ -6,12 +6,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.fungid.core.data.UserPreferences
 import com.example.fungid.core.data.remote.Api
 import com.example.fungid.core.ui.UserPreferencesViewModel
+import com.example.fungid.pages.classification_jobs.classification_page.MushroomClassificationPage
 import com.example.fungid.pages.classification_jobs.classifications_page.ClassificationsPage
 import com.example.fungid.pages.classification_jobs.main_camera_page.MainCameraPage
 import com.example.fungid.pages.login.LoginPage
@@ -28,8 +31,11 @@ val CAMERA_PAGE = "camera_page"
 fun FungIDNavHost() {
     val navController = rememberNavController()
 
-    val userPreferencesViewModel = viewModel<UserPreferencesViewModel>(factory = UserPreferencesViewModel.Factory)
-    val userPreferencesUiState by userPreferencesViewModel.uiState.collectAsStateWithLifecycle(initialValue = UserPreferences())
+    val userPreferencesViewModel =
+        viewModel<UserPreferencesViewModel>(factory = UserPreferencesViewModel.Factory)
+    val userPreferencesUiState by userPreferencesViewModel.uiState.collectAsStateWithLifecycle(
+        initialValue = UserPreferences()
+    )
 
     val fungIDViewModel = viewModel<FungIDViewModel>(factory = FungIDViewModel.Factory)
 
@@ -80,18 +86,32 @@ fun FungIDNavHost() {
                 onActivateCamera = {
                     Log.d("ClassificationsPage", "Triggering camera")
                     navController.navigate(CAMERA_PAGE)
+                },
+                onMushroomInstanceClick = { mushroomInstanceId ->
+                    Log.d("ClassificationsPage", "navigate to mushroomInstance $mushroomInstanceId")
+                    navController.navigate("$CLASSIFICATION_JOB_LIST_ROUTE/$mushroomInstanceId")
+                },
+                onLogout = {
+
+                    Log.d("ClassificationsPage", "Log out initiated")
+                    fungIDViewModel.logout()
+                    Api.tokenInterceptor.token = null
+                    navController.navigate(LOGIN_ROUTE) {
+                        popUpTo(0)
+                    }
                 }
-            ) {
-                Log.d("ClassificationsPage", "Log out initiated")
-                fungIDViewModel.logout()
-                Api.tokenInterceptor.token = null
-                navController.navigate(LOGIN_ROUTE) {
-                    popUpTo(0)
-                }
-            }
+            )
         }
         composable(CAMERA_PAGE) {
             MainCameraPage()
+        }
+        composable(
+            route = "$CLASSIFICATION_JOB_LIST_ROUTE/{id}",
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+            })
+        ) {
+            MushroomClassificationPage(mushroomInstanceId = it.arguments?.getString("id"))
         }
     }
 
@@ -100,7 +120,7 @@ fun FungIDNavHost() {
             Log.d("FungIDNavHost", "Launched effect skip login")
             Api.tokenInterceptor.token = userPreferencesUiState.token
 
-            navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE){
+            navController.navigate(CLASSIFICATION_JOB_LIST_ROUTE) {
                 popUpTo(0)
             }
         }

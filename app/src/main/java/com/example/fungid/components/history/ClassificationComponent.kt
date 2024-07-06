@@ -1,6 +1,7 @@
 package com.example.fungid.components.history
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import com.example.fungid.AppConstants
 import com.example.fungid.classification.MushroomInstance
 
 @Composable
-fun ClassificationComponent(mushroomInstance: MushroomInstance) {
+fun ClassificationComponent(
+    mushroomInstance: MushroomInstance,
+    onClick: (String) -> Unit = {}
+) {
 
     val mushroomDate = AppConstants.DISPLAY_DATE_FORMATTER.format(mushroomInstance.sampleTakenAt)
 
@@ -37,6 +41,7 @@ fun ClassificationComponent(mushroomInstance: MushroomInstance) {
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
+            .clickable { onClick(mushroomInstance.id) }
     ) {
         Column() {
             Row(
