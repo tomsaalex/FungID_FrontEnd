@@ -30,7 +30,8 @@ import com.example.fungid.components.history.MushroomInstancesList
 @Composable
 fun ClassificationsPage(
     onActivateCamera: () -> Unit = {},
-    onLogout: () -> Unit = {}
+    onLogout: () -> Unit = {},
+    onMushroomInstanceClick: (String) -> Unit = {}
 ) {
 
     val classificationsPageViewModel = viewModel<ClassificationsPageViewModel>(factory = ClassificationsPageViewModel.Factory)
@@ -80,7 +81,7 @@ fun ClassificationsPage(
             }
         }
     ) {
-        MushroomInstancesList(mushroomInstancesList = mushroomInstancesUiState, modifier = Modifier.padding(it))
+        MushroomInstancesList(mushroomInstancesList = mushroomInstancesUiState, modifier = Modifier.padding(it), onMushroomInstanceClick = onMushroomInstanceClick)
     }
 }
 

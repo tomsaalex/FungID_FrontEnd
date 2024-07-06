@@ -13,6 +13,7 @@ import com.example.fungid.classification.MushroomInstance
 @Composable
 fun MushroomInstancesList(
     mushroomInstancesList: List<MushroomInstance>,
+    onMushroomInstanceClick: (String) -> Unit,
     modifier: Modifier
 ) {
     Log.d("MushroomInstancesList", "recompose")
@@ -23,7 +24,7 @@ fun MushroomInstancesList(
             .padding(12.dp)
     ) {
         items(mushroomInstancesList) {mushroomInstance ->
-            ClassificationComponent(mushroomInstance)
+            ClassificationComponent(mushroomInstance, onClick = onMushroomInstanceClick)
         }
     }
 }

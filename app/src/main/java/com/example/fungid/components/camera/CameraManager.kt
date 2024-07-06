@@ -16,13 +16,10 @@ import com.example.fungid.AppConstants
 import com.example.fungid.MainActivity
 import com.example.fungid.util.TAG
 import java.time.LocalDateTime
-import java.util.concurrent.ExecutorService
 
 class CameraManager(private val activity: MainActivity) {
     private var imageCaptureUseCase: ImageCapture? = null
     var previewUseCase: Preview? = null
-
-    lateinit var cameraExecutor: ExecutorService
 
     fun takePhoto(onImageFile: (Uri, LocalDateTime) -> Unit) {
         val imageCapture = imageCaptureUseCase ?: return

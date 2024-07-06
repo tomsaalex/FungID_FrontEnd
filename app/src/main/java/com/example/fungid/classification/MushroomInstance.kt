@@ -8,5 +8,6 @@ import java.time.LocalDateTime
 data class MushroomInstance(
     @PrimaryKey val id: String = "",
     val mushroomSpecies: String = "",
-    val sampleTakenAt: LocalDateTime = LocalDateTime.now()
+    val sampleTakenAt: LocalDateTime = LocalDateTime.now(),
+    var localImagePath: String = ""
 )

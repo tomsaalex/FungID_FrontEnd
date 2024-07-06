@@ -24,7 +24,7 @@ class ClassificationsPageViewModel(
         loadMushroomInstances()
     }
 
-    fun loadMushroomInstances() {
+    private fun loadMushroomInstances() {
         Log.d(TAG, "loadMushroomInstances...")
         viewModelScope.launch {
             classificationRepository.refresh()
