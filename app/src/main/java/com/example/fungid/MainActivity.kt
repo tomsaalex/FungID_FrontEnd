@@ -8,7 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.fungid.components.camera.CameraManager
+import com.example.fungid.ui.components.camera.CameraManager
+import com.example.fungid.core.ui.FungIDNavHost
 import com.example.fungid.ui.theme.FungIDTheme
 
 class MainActivity : ComponentActivity() {

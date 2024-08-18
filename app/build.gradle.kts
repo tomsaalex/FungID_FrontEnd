@@ -116,4 +116,10 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-scalars
     implementation(libs.converter.scalars)
 
+    // WorkManager dependency
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // https://mvnrepository.com/artifact/com.auth0.android/jwtdecode
+    implementation(libs.jwtdecode)
+
 }
