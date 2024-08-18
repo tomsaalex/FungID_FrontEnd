@@ -24,7 +24,7 @@ class AuthRepository(private val authDataSource: AuthDataSource) {
     }
 
     suspend fun register(username: String, password: String, email: String): Result<TokenHolder> {
-        val user = RegisterDTO(username)
+        val user = RegisterDTO(username, password, email)
         Log.d(TAG, "Before register")
         val result = authDataSource.register(user)
 
