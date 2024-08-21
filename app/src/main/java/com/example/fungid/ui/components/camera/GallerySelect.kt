@@ -35,7 +35,7 @@ fun GallerySelect(
         Permission(
             permission = Manifest.permission.ACCESS_MEDIA_LOCATION,
             rationaleText = "You want to read from photo gallery, so I'm going to have to ask for permission.",
-            dismissedText = "You did not grant the permission, so I cannot access your gallery for you"
+            defaultText = "The app cannot read the photo gallery without permission. \n Please grant it."
         ) {
             LaunchGallery()
         }

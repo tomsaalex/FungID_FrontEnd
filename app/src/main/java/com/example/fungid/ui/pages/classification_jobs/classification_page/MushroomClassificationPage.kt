@@ -5,11 +5,16 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,11 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.fungid.R
@@ -53,39 +61,51 @@ fun MushroomClassificationPage(mushroomInstanceId: String?) {
         BoxWithConstraints {
             val boxWithConstraintsScope = this
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                if (usePlaceholderImage) {
-                    Image(
-                        modifier = Modifier
-                            .border(BorderStroke(10.dp, MaterialTheme.colorScheme.secondary))
-                            .fillMaxHeight(0.7f),
-                        contentDescription = "Image of the selected mushroom",
-                        //contentScale = ContentScale.FillWidth,
-                        painter = painterResource(id = R.drawable.placeholder_image)
-                        //modifier.width(300.dp).height()
-                    )
-                } else {
-                    Image(
-                        modifier = Modifier
-                            .border(BorderStroke(10.dp, MaterialTheme.colorScheme.secondary))
-                            .fillMaxSize(0.7f),
-                            //.heightIn(0.dp, boxWithConstraintsScope.maxHeight*0.7f).widthIn(0.dp, boxWithConstraintsScope.maxWidth*0.9f),
-                            //.size(width=boxWithConstraintsScope.maxWidth*0.9f,height=boxWithConstraintsScope.maxHeight*0.7f),
-                            /*.fillMaxHeight(0.7f)
-                            .fillMaxWidth(0.9f).aspectRatio(1f, matchHeightConstraintsFirst = true),*/
-                        contentScale = ContentScale.FillBounds,
-                        contentDescription = "Image of the selected mushroom",
-                        painter = rememberAsyncImagePainter(mushroomClassificationUiState.mushroomInstance!!.localImagePath)
-                    )
+            ConstraintLayout(modifier = Modifier.fillMaxSize()  ) {
+                val (topContainer, bottomContainer) = createRefs()
+
+                val guideline = createGuidelineFromTop(0.05f)
+
+                Box(
+                    modifier = Modifier
+                        //.fillMaxWidth(0.9f)
+                        //.aspectRatio(1f)
+                        .constrainAs(topContainer) {
+                            top.linkTo(guideline)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.percent(0.9f)
+                            height = Dimension.percent(0.7f)
+                        }
+                ) {
+                    if (usePlaceholderImage) {
+                        Image(
+                            modifier = Modifier.fillMaxSize()
+                                .border(BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)),
+                            contentDescription = "Image of the selected mushroom",
+                            contentScale = ContentScale.Fit, // Fit the image within the box while preserving aspect ratio
+                            painter = painterResource(id = R.drawable.placeholder_image)
+                        )
+                    } else {
+                        Image(
+                            modifier = Modifier.fillMaxSize().border(BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)),
+                            contentDescription = "Image of the selected mushroom",
+                            contentScale = ContentScale.Fit, // Fit the image while maintaining its aspect ratio
+                            painter = rememberAsyncImagePainter(mushroomClassificationUiState.mushroomInstance!!.localImagePath)
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 0.dp, 100.dp)
+                        .constrainAs(bottomContainer) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
                 ) {
                     if (boxWithConstraintsScope.maxWidth < 400.dp) {
                         Text(

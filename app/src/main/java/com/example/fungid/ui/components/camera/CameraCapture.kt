@@ -51,7 +51,7 @@ fun CameraCapture(
     Permission(
         permission = Manifest.permission.CAMERA,
         rationaleText = "The app requires Camera permission to be able to take pictures of mushrooms",
-        dismissedText = "Permission not granted. You will not be able to take pictures."
+        defaultText = "Please grant Camera permissions in order to use the app."
     ) {
         FullUICameraComponent(modifier, onImageFile, onGallerySelectClick)
     }

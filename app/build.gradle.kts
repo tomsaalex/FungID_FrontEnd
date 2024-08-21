@@ -122,4 +122,5 @@ dependencies {
     // https://mvnrepository.com/artifact/com.auth0.android/jwtdecode
     implementation(libs.jwtdecode)
 
+    implementation(libs.androidx.constraintlayout.compose)
 }
