@@ -83,8 +83,6 @@ class CameraManager(private val activity: MainActivity) {
 
         imageCaptureUseCase =
             ImageCapture.Builder()
-                //TODO: Play around with this and see if it fixes the rotation bug
-                // .setTargetRotation(activity.display.rotation)
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
                 .build()
     }

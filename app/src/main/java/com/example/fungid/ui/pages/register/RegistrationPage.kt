@@ -149,7 +149,6 @@ fun RegistrationPage(
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f)
             )
-            //Spacer(modifier = Modifier.fillMaxHeight(0.1f))
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),

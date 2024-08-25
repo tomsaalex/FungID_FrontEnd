@@ -74,15 +74,6 @@ fun MainCameraPage(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    /*DisposableEffect(context) {
-        // Lock the screen orientation.
-        context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-        onDispose {
-            // Release the the screen orientation lock.
-            context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }
-    }*/
-
     if (imageUri != EMPTY_IMAGE_URI) {
         BoxWithConstraints() {
             SnackbarHost(

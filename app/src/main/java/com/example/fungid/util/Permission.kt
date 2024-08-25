@@ -64,19 +64,6 @@ fun Permission(
             }
         }
     }
-    /*PermissionRequired(
-        permissionState = permissionState,
-        permissionNotGrantedContent = {
-            PermissionNotGranted(
-                text = rationaleText,
-                onRequestPermission = { permissionState.launchPermissionRequest() }
-            )
-        },
-        permissionNotAbailableContent = {
-            PermissionNotAvailable(text = dismissedText)
-        },
-        content = content
-    )*/
 }
 
 @Composable
