@@ -1,2 +1,2 @@
-# FungID
-A mushroom classficiation app for Android systems.
+# FungID - Mobile Client
+The Android client for my client-server, mushroom identification application, built as part of my Bachelor's Thesis.
